@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Todo;
 
@@ -22,7 +23,8 @@ class TodosController extends Controller
     public function index()
     {
         $todos = Todo::all();
-        return view('todos.index',compact('todos'));
+        $categories = Category::all();
+        return view('todos.index',compact('todos','categories'));
     }
 
     /**
@@ -48,6 +50,7 @@ class TodosController extends Controller
         ]);
         $todo = new Todo() ;
         $todo->title=$request->title;
+        $todo->category_id=$request->category_id;
         $todo->save();
 
         return redirect('index')->with('success', 'Tarea creada correctamente');
@@ -88,10 +91,7 @@ class TodosController extends Controller
     {
         $todo = Todo::find($id);
         $todo->title= $request->title;
-        /* dd($todo); */
         $todo->save();
-
-        //sreturn view('todos.index',['success'=>'Tarea actualizada']);
 
         return redirect()->route('index')->with('success', 'Tarea actualizada!');
 
